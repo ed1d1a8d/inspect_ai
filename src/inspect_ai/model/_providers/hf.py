@@ -180,6 +180,10 @@ class HuggingFaceAPI(ModelAPI):
             stopping_criteria = [StopStringCriteria(self.tokenizer, config.stop_seqs)]
             kwargs["stopping_criteria"] = stopping_criteria
 
+        if kwargs.get("temperature") == 0:
+            kwargs["do_sample"] = False
+            del kwargs["temperature"]
+
         kwargs["return_dict_in_generate"] = True
         generator = functools.partial(self.model.generate, **kwargs)
 
