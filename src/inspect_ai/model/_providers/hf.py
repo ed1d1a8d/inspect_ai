@@ -17,6 +17,7 @@ from typing import Any, Literal, Protocol, cast
 
 import anyio
 import numpy as np
+from numpy.random.mtrand import noncentral_chisquare
 import torch  # type: ignore
 from torch import Tensor  # type: ignore
 from transformers import (  # type: ignore
@@ -182,7 +183,9 @@ class HuggingFaceAPI(ModelAPI):
 
         if kwargs.get("temperature") == 0:
             kwargs["do_sample"] = False
-            del kwargs["temperature"]
+            kwargs["temperature"] = None
+            kwargs["top_p"] = None
+            kwargs["top_k"] = None
 
         kwargs["return_dict_in_generate"] = True
         generator = functools.partial(self.model.generate, **kwargs)
